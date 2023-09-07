@@ -134,7 +134,7 @@ in {
           fi
         '')}
 
-        exec ${cfg.package}/bin/sshd -D -f /etc/ssh/sshd_config
+        exec ${cfg.package}/bin/sshd -D -f /etc/ssh/sshd_config -e
       '';
     };
   };
