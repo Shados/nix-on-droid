@@ -34,7 +34,9 @@ in
       };
 
       prootStatic = mkOption {
-        type = types.package;
+        type = types.package // {
+          merge = lib.mergeOneOption;
+        };
         readOnly = true;
         internal = true;
         description = "<literal>proot-static</literal> package.";

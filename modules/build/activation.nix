@@ -9,18 +9,20 @@ let
 
   profileDirectory = "/nix/var/nix/profiles/nix-on-droid";
 
-  # Programs that always should be available on the activation
-  # script's PATH.
-  activationBinPaths = lib.makeBinPath [
-    pkgs.bash
-    pkgs.coreutils
-    pkgs.diffutils
-    pkgs.findutils
-    pkgs.gnugrep
-    pkgs.gnused
-    pkgs.ncurses # For `tput`.
-    config.nix.package
-  ];
+  activationBinPaths = lib.makeBinPath (
+    # Programs that always should be available on the activation script's PATH.
+    [
+      pkgs.bash
+      pkgs.coreutils
+      pkgs.diffutils
+      pkgs.findutils
+      pkgs.gnugrep
+      pkgs.gnused
+      pkgs.ncurses # For `tput`.
+      config.nix.package
+    ]
+    ++ cfg.activationExtraBinPackages
+  );
 
   mkActivationCmds = activation: concatStringsSep "\n" (
     mapAttrsToList
@@ -111,6 +113,15 @@ in
         readOnly = true;
         internal = true;
         description = "Derivation with activation script.";
+      };
+
+      activationExtraBinPackages = mkOption {
+        default = [ ];
+        type = with types; listOf package;
+        description = ''
+          Additional packages to add to PATH in the environment of the
+          activation scripts.
+        '';
       };
 
       etc = mkOption {
